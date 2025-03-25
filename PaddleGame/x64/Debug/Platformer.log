@@ -1,4 +1,12 @@
-﻿  LINK : F:\c++\GameLearn\PaddleGame\x64\Debug\PaddleGame.exe not found or not built by the last incremental link; performing full link
+﻿  Main.cpp
+F:\c++\GameLearn\PaddleGame\SFML-3.0.0\include\SFML\System\Exception.hpp(42,1): warning C4275: non dll-interface class 'std::runtime_error' used as base for dll-interface class 'sf::Exception'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\stdexcept(101): message : see declaration of 'std::runtime_error'
+F:\c++\GameLearn\PaddleGame\SFML-3.0.0\include\SFML\System\Exception.hpp(41): message : see declaration of 'sf::Exception'
+  Paddle.cpp
+F:\c++\GameLearn\PaddleGame\SFML-3.0.0\include\SFML\System\Exception.hpp(42,1): warning C4275: non dll-interface class 'std::runtime_error' used as base for dll-interface class 'sf::Exception'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\stdexcept(101): message : see declaration of 'std::runtime_error'
+F:\c++\GameLearn\PaddleGame\SFML-3.0.0\include\SFML\System\Exception.hpp(41): message : see declaration of 'sf::Exception'
+  Generating Code...
   Platformer.vcxproj -> F:\c++\GameLearn\PaddleGame\x64\Debug\PaddleGame.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
