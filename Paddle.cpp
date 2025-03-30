@@ -20,15 +20,22 @@ sf::Vector2f Paddle::GetPos() const
 {
 	return paddle.getPosition();
 }
+float Paddle::GetWidth() const
+{
+	return paddle.getSize().x;
+}
+float Paddle::GetHeight() const
+{
+	return paddle.getSize().y;
+}
 void Paddle::Movement(float delta, const sf::Window& window)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 	{
 		float PaddlePosX = paddle.getPosition().x;
-		float PaddleWidth = paddle.getSize().x;
-		if (PaddlePosX + PaddleWidth > window.getSize().x) // this is just give us the rightside of the paddle
+		if (PaddlePosX + GetWidth() > window.getSize().x) // this is just give us the rightside of the paddle
 		{
-			float newPos = window.getSize().x - PaddleWidth;
+			float newPos = window.getSize().x - GetWidth();
 			paddle.setPosition({ newPos,paddle.getPosition().y });
 		}
 		else
@@ -42,5 +49,6 @@ void Paddle::Movement(float delta, const sf::Window& window)
 		}
 		else
 			paddle.move({ -speed * delta,0 });
+			
 	}
 }

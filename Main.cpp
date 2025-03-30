@@ -26,7 +26,7 @@ int main()
        paddle.Movement(DeltaTime.asSeconds(),window);
        
        ball.Draw(window);
-       ball.Movement(DeltaTime.asSeconds(),window);
+       ball.Movement(DeltaTime.asSeconds(),window,paddle);
 
        window.display();
     }

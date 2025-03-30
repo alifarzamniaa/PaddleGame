@@ -8,6 +8,8 @@ public:
 	void SetPosition(const sf::Vector2f& in_pos);
 	void Movement(float delta,const sf::Window& window);
 	sf::Vector2f GetPos() const;
+	float GetWidth() const;
+	float GetHeight() const;
 private:
 	sf::RectangleShape paddle;
 	float speed; 
