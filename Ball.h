@@ -8,7 +8,7 @@ public:
 	Ball(float rad,const sf::Vector2f& pos,float speed,const sf::Color& color);
 	void Draw(sf::RenderWindow& window) const;
 	void Movement(float delta, const PlayGround& Area, const Paddle& paddle);
-	void CheckBoxCollision(std::vector<Box>& boxes);
+	void CheckBoxCollision(PlayGround& Area);
 	bool GetFloorHit();
 private:
 	void Bouncing(float delta, const PlayGround& Area);

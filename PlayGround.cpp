@@ -45,10 +45,15 @@ void PlayGround::Draw(sf::RenderWindow& window)
     if(GameOverState)
     {
         window.draw(GameOverRect);
+        score->Draw(window);
+        window.getSize().x / 2;
+        score->SetPos({ window.getSize().x / 2.f - OffsetX ,window.getSize().y / 2.f + 200.f + OffsetY });
     }
     else
     {
          window.draw(PlayArea);    
+         assert(score); // you have to call the SetTextAttr func before drawing it
+         score->Draw(window);
          for(const auto& b : boxes)
          {
             b.Draw(window);
@@ -86,6 +91,19 @@ sf::Vector2f PlayGround::GetPosition() const
     return PlayArea.getPosition();
 }
 
+void PlayGround::SetTextAttr(const std::string& fontPath, int textSize, const sf::Color& color, const sf::Vector2f& pos)
+{
+   score = std::make_unique<Score>(fontPath,textSize,color,pos);
+}
+
+void PlayGround::UpdateScore(int val)
+{
+    if(score)
+    {
+        score->AddScore(val);
+    }
+}
+
 void PlayGround::SetGameOverState(bool in_state)
 {
     GameOverState = in_state;
@@ -96,13 +114,3 @@ std::vector<Box>& PlayGround::GetBoxes()
     return boxes;
 }
 
-//void PlayGround::BoxCollision(Ball& ball)
-//{
-//    for(auto b : boxes)
-//    {
-//        std::remove_if(boxes.begin(),boxes.end(),[&](const Box& box)
-//        {
-//            return ball.CheckBoxCollision(box);
-//        });
-//    }
-//}

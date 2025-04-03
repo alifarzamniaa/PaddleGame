@@ -1,7 +1,28 @@
-﻿  Ball.cpp
+﻿  PlayGround.cpp
 F:\c++\GameLearn\PaddleGame\SFML-3.0.0\include\SFML\System\Exception.hpp(42,1): warning C4275: non dll-interface class 'std::runtime_error' used as base for dll-interface class 'sf::Exception'
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\stdexcept(101): message : see declaration of 'std::runtime_error'
 F:\c++\GameLearn\PaddleGame\SFML-3.0.0\include\SFML\System\Exception.hpp(41): message : see declaration of 'sf::Exception'
+F:\c++\GameLearn\PaddleGame\PlayGround.cpp(7,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\c++\GameLearn\PaddleGame\PlayGround.cpp(8,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\c++\GameLearn\PaddleGame\PlayGround.cpp(20,87): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+F:\c++\GameLearn\PaddleGame\PlayGround.cpp(20,54): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+F:\c++\GameLearn\PaddleGame\PlayGround.cpp(49,28): warning C4552: '/': result of expression not used
   Platformer.vcxproj -> F:\c++\GameLearn\PaddleGame\x64\Debug\PaddleGame.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.

@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Box.h"
 #include <vector>
+#include "Score.h"
 class PlayGround
 {
 public:
@@ -14,7 +15,8 @@ public:
 	float GetTopOffset() const;
 	sf::Vector2f GetOffset() const;
 	sf::Vector2f GetPosition() const;
-
+	void SetTextAttr(const std::string& fontPath, int textSize, const sf::Color& color, const sf::Vector2f& pos);
+	void UpdateScore(int val);
 	void SetGameOverState(bool in_state);
 	
 	std::vector<Box>& GetBoxes();
@@ -30,5 +32,6 @@ private:
 	float TopOffset = 20.f;
 	std::vector<Box> boxes;
 	sf::Color BoxColors[5] = {sf::Color::Magenta,sf::Color::Green,sf::Color::Yellow,sf::Color::White,sf::Color::Cyan};
+	std::unique_ptr<Score> score;
 };
 

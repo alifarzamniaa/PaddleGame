@@ -7,8 +7,10 @@ public:
 	void Draw(sf::RenderWindow& window) const;
 	sf::Vector2f GetPos() const;
 	sf::Vector2f GetSize() const; // x is width , y is height
+	int GetBoxScore() const;
 private:
 	sf::RectangleShape boxShape;
 	sf::Color color;
+	int BoxScore = 1;
 };
 

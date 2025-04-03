@@ -26,4 +26,9 @@ sf::Vector2f Box::GetSize() const
 	return boxShape.getSize();
 }
 
+int Box::GetBoxScore() const
+{
+	return BoxScore;
+}
+
 

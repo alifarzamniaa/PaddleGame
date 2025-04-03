@@ -77,8 +77,9 @@ void Ball::CheckPaddleCollision(const Paddle& paddle)
 			
 		}
 }
-void Ball::CheckBoxCollision(std::vector<Box>& boxes)
+void Ball::CheckBoxCollision(PlayGround& Area)
 {
+	auto& boxes = Area.GetBoxes();
 	for(int i = 0; i < boxes.size();i++)
 	{
 		if (ball.getPosition().x < boxes[i].GetPos().x + boxes[i].GetSize().x &&
@@ -105,6 +106,7 @@ void Ball::CheckBoxCollision(std::vector<Box>& boxes)
 					BallVel.x *= -1;
 			}
 			BallVel.y *= -1;
+			Area.UpdateScore(boxes[i].GetBoxScore());
 			boxes.erase(boxes.begin() + i);
 		}
 	}
