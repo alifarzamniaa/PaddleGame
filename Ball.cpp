@@ -21,6 +21,7 @@ void Ball::Movement(float delta, const PlayGround& Area, const Paddle& paddle)
 	CheckPaddleCollision(paddle);
 	ball.move(BallVel * delta);
 }
+
 bool Ball::GetFloorHit()
 {
 	return IsHitFloor;
@@ -62,4 +63,21 @@ void Ball::CheckPaddleCollision(const Paddle& paddle)
 			BallVel =  (2.f * (DotProduct * paddleVec)) - BallVel;
 			
 		}
+}
+void Ball::CheckBoxCollision(std::vector<Box>& boxes)
+{
+	for(int i = 0; i < boxes.size();i++)
+	{
+		if (ball.getPosition().x < boxes[i].GetPos().x + boxes[i].GetSize().x &&
+			ball.getPosition().x + 2 * radius > boxes[i].GetPos().x &&
+			ball.getPosition().y < boxes[i].GetPos().y + boxes[i].GetSize().y &&
+			ball.getPosition().y + 2 * radius > boxes[i].GetPos().y
+			)
+		{
+			sf::Vector2f paddleVec = sf::Vector2f(boxes[i].GetSize().x, 0).normalized();
+			float DotProduct = BallVel.x * paddleVec.x + BallVel.y * paddleVec.y;
+			BallVel = (2.f * (DotProduct * paddleVec)) - BallVel;
+			boxes.erase(boxes.begin() + i);
+		}
+	}
 }

@@ -1,11 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Box.h"
+#include <vector>
 class PlayGround
 {
 public:
-	PlayGround(const std::string& GameOverPath, const sf::Window& window, int in_OffsetX, int in_OffsetY, const sf::Color& OutLineColor);
-	sf::RectangleShape GetPlayArea() const;
-	sf::RectangleShape GetGameOverRect() const;
+	PlayGround(const std::string& GameOverPath, const sf::Window& window, int in_OffsetX, int in_OffsetY, const sf::Color& OutLineColor,
+			   const sf::Vector2f& BoxesSize , const sf::Vector2f& BoxesInitPos, const sf::Vector2f& Padding);
+	void Draw(sf::RenderWindow& window);
 	bool GetGameOverState() const;
 	float GetWidth() const;
 	float GetHeight() const;
@@ -14,7 +16,8 @@ public:
 	sf::Vector2f GetPosition() const;
 
 	void SetGameOverState(bool in_state);
-
+	
+	std::vector<Box>& GetBoxes();
 private:
 	sf::RectangleShape PlayArea;
 	const sf::Window& window;
@@ -25,5 +28,7 @@ private:
 	float OffsetX;
 	float OffsetY;
 	float TopOffset = 20.f;
+	std::vector<Box> boxes;
+	sf::Color BoxColors[5] = {sf::Color::Magenta,sf::Color::Green,sf::Color::Yellow,sf::Color::White,sf::Color::Cyan};
 };
 
