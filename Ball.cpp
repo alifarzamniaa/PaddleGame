@@ -1,10 +1,9 @@
 #include "Ball.h"
 
 
-Ball::Ball(float rad, const sf::Vector2f& pos, float speed, const sf::Color& color)
+Ball::Ball(float rad, const sf::Vector2f& pos, const sf::Color& color)
 	:
-	radius(rad),
-	speed(speed)
+	radius(rad)
 {
 	ball.setPosition(pos);
 	ball.setRadius(radius);
@@ -56,16 +55,14 @@ void Ball::CheckPaddleCollision(const Paddle& paddle)
 			float PaddleCenter = (paddle.GetPos().x + paddle.GetWidth() / 2.f);
 			float HitPos = (ball.getPosition().x - PaddleCenter) / (paddle.GetWidth() /2);
 			HitPos = std::clamp(HitPos,-1.f,1.f);
-			
-			if (HitPos < -0.4f) //if it hits the left side
+			if (HitPos < 0.0f) //if it hits the left side
 			{
 				if(BallVel.x > 0)
 					BallVel.x *= -1;
 				if(BallVel.x < 0)
 					BallVel.x *= 1;
-			}
-				
-			else if(HitPos > 0.4f)
+			}	
+			else
 			{
 				if (BallVel.x > 0)
 					BallVel.x *= 1;
@@ -88,17 +85,17 @@ void Ball::CheckBoxCollision(PlayGround& Area)
 			ball.getPosition().y + 2 * radius > boxes[i].GetPos().y
 			)
 		{
+			
 			float PaddleCenter = (boxes[i].GetPos().x + boxes[i].GetSize().x / 2.f);
 			float HitPos = (ball.getPosition().x - PaddleCenter) / (boxes[i].GetSize().x / 2);
-			if (HitPos < -0.4f) //if it hits the left side
+			if (HitPos < 0.0f) //if it hits the left side
 			{
 				if (BallVel.x > 0)
 					BallVel.x *= -1;
 				if (BallVel.x < 0)
 					BallVel.x *= 1;
 			}
-
-			else if (HitPos > 0.4f)
+			else
 			{
 				if (BallVel.x > 0)
 					BallVel.x *= 1;
@@ -106,6 +103,8 @@ void Ball::CheckBoxCollision(PlayGround& Area)
 					BallVel.x *= -1;
 			}
 			BallVel.y *= -1;
+			BallVel.x += SpeedUpOnHit;
+			BallVel.y += SpeedUpOnHit;
 			Area.UpdateScore(boxes[i].GetBoxScore());
 			boxes.erase(boxes.begin() + i);
 		}

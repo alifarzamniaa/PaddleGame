@@ -1,7 +1,6 @@
 #include "PlayGround.h"
 #include <random>
-PlayGround::PlayGround(const std::string& GameOverPath, const sf::Window& window,int in_OffsetX,int in_OffsetY, const sf::Color& OutLineColor,
-    const sf::Vector2f& BoxesSize,const sf::Vector2f& BoxesInitPos, const sf::Vector2f& Padding)
+PlayGround::PlayGround(const std::string& GameOverPath, const sf::Window& window,int in_OffsetX,int in_OffsetY, const sf::Color& OutLineColor)
 	:
     window(window),
     OffsetX(in_OffsetX),
@@ -21,22 +20,7 @@ PlayGround::PlayGround(const std::string& GameOverPath, const sf::Window& window
     PlayArea.setOrigin(PlayArea.getSize() / 2.f);
     PlayArea.setPosition(sf::Vector2f(window.getSize().x / 2.f, window.getSize().x / 2.f + TopOffset));
 
-    std::random_device rd;
-    std::mt19937 re(rd());
-    std::uniform_int_distribution<int> ColorPick(0,4);
-    sf::Vector2f TopLeft = PlayArea.getPosition() - (PlayArea.getSize() / 2.f);
-    for(int i = 0; i < 5; i++)
-    {
-        int ColorNum = ColorPick(re);
-        for(int j = 0; j < 5;j++)
-        {
-            float Xpos = TopLeft.x + BoxesInitPos.x;
-            float Ypos = TopLeft.y + BoxesInitPos.y;
-            Xpos += j * (BoxesSize.x + Padding.x);
-            Ypos += i * (BoxesSize.y + Padding.y);
-            boxes.emplace_back(Box(sf::Vector2f(Xpos, Ypos) ,BoxColors[ColorNum], BoxesSize.x, BoxesSize.y));
-        }
-    }
+    SpawnBoxes();
 }
 
 
@@ -58,9 +42,31 @@ void PlayGround::Draw(sf::RenderWindow& window)
          {
             b.Draw(window);
          }
+         if(boxes.size() == 0)
+         {
+            SpawnBoxes();
+         }
     }
 }
-
+void PlayGround::SpawnBoxes()
+{
+        std::random_device rd;
+        std::mt19937 re(rd());
+        std::uniform_int_distribution<int> ColorPick(0, 4);
+        sf::Vector2f TopLeft = PlayArea.getPosition() - (PlayArea.getSize() / 2.f);
+        for (int i = 0; i < NumberOfBoxesInColumn; i++)
+        {
+            int ColorNum = ColorPick(re);
+            for (int j = 0; j < NumberOfBoxesInRow; j++)
+            {
+                float Xpos = TopLeft.x;
+                float Ypos = TopLeft.y;
+                Xpos += j * (BoxWidth + Padding.x);
+                Ypos += i * (BoxHeight + Padding.y);
+                boxes.emplace_back(Box(sf::Vector2f(Xpos, Ypos), BoxColors[ColorNum], BoxWidth, BoxHeight));
+            }
+        }
+}
 bool PlayGround::GetGameOverState() const
 {
     return GameOverState;

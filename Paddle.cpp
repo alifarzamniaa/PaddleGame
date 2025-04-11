@@ -1,12 +1,10 @@
 #include "Paddle.h"
 
-Paddle::Paddle(float in_width, float in_height, const sf::Vector2f& in_pos, const sf::Color& color, float speed)
-	:
-	speed(speed)
+Paddle::Paddle(float in_width, float in_height, const sf::Vector2f& in_pos)
 {
 	paddle.setSize({ in_width,in_height });
 	paddle.setPosition(in_pos);
-	paddle.setFillColor(color);
+	paddle.setFillColor(PaddleColor);
 }
 void Paddle::draw(sf::RenderWindow & window) const
 {
