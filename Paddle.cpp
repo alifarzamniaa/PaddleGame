@@ -6,7 +6,7 @@ Paddle::Paddle(float in_width, float in_height, const sf::Vector2f& in_pos)
 	paddle.setPosition(in_pos);
 	paddle.setFillColor(PaddleColor);
 }
-void Paddle::draw(sf::RenderWindow & window) const
+void Paddle::Draw(sf::RenderWindow & window) const
 {
 	window.draw(paddle);
 }
@@ -26,14 +26,14 @@ float Paddle::GetHeight() const
 {
 	return paddle.getSize().y;
 }
-void Paddle::Movement(float delta, const PlayGround& Area)
+void Paddle::Movement(float delta, float Left, float Right, float Top, float Bottom)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 	{
 		float PaddlePosX = paddle.getPosition().x;
-		if (PaddlePosX + GetWidth() > Area.GetWidth() + (Area.GetOffset().x / 2)) // this is just give us the rightside of the paddle
+		if (PaddlePosX + GetWidth() > Right) // this is just give us the rightside of the paddle
 		{
-			float newPos = Area.GetWidth() + (Area.GetOffset().x / 2) - GetWidth();
+			float newPos = Right - GetWidth();
 			paddle.setPosition({ newPos,paddle.getPosition().y });
 		}
 		else
@@ -41,9 +41,9 @@ void Paddle::Movement(float delta, const PlayGround& Area)
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 	{
-		if (paddle.getPosition().x < Area.GetPosition().x - (Area.GetWidth() / 2))
+		if (paddle.getPosition().x < Left)
 		{
-			paddle.setPosition({ Area.GetPosition().x - (Area.GetWidth() / 2),paddle.getPosition().y });
+			paddle.setPosition({ Left,paddle.getPosition().y });
 		}
 		else
 			paddle.move({ -speed * delta,0 });

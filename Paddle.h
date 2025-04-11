@@ -1,13 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "PlayGround.h"
 class Paddle
 {
 public:
 	Paddle(float in_width,float in_height,const sf::Vector2f& in_pos);
-	void draw(sf::RenderWindow& window) const;
+	void Draw(sf::RenderWindow& window) const;
 	void SetPosition(const sf::Vector2f& in_pos);
-	void Movement(float delta, const PlayGround& Area);
+	void Movement(float delta, float Left, float Right, float Top, float Bottom);
 	sf::Vector2f GetPos() const;
 	float GetWidth() const;
 	float GetHeight() const;

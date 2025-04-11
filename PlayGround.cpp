@@ -1,10 +1,11 @@
 #include "PlayGround.h"
 #include <random>
-PlayGround::PlayGround(const std::string& GameOverPath, const sf::Window& window,int in_OffsetX,int in_OffsetY, const sf::Color& OutLineColor)
+PlayGround::PlayGround(const std::string& GameOverPath, const sf::Window& window, const sf::Color& OutLineColor)
 	:
     window(window),
-    OffsetX(in_OffsetX),
-    OffsetY(in_OffsetY)
+    paddle(200.f, 20.f, sf::Vector2f(450.f, 680.f)),
+    ball(15.f, { 300,400 }, sf::Color(160, 21, 62)),
+    ScoreText(font)
 {
     assert(GameOverImage.loadFromFile(GameOverPath));
     assert(GameOver.loadFromImage(GameOverImage));
@@ -16,11 +17,16 @@ PlayGround::PlayGround(const std::string& GameOverPath, const sf::Window& window
     PlayArea.setOutlineColor(OutLineColor);
     PlayArea.setFillColor(sf::Color(0, 34, 77));
     PlayArea.setOutlineThickness(9.f);
-    PlayArea.setSize(sf::Vector2f(window.getSize().x - in_OffsetX, window.getSize().y - in_OffsetY));
+    PlayArea.setSize(sf::Vector2f(window.getSize().x - OffsetX, window.getSize().y - OffsetY));
     PlayArea.setOrigin(PlayArea.getSize() / 2.f);
     PlayArea.setPosition(sf::Vector2f(window.getSize().x / 2.f, window.getSize().x / 2.f + TopOffset));
 
     SpawnBoxes();
+
+    ScoreText.setCharacterSize(TextSize);
+    ScoreText.setFillColor(TextColor);
+    ScoreText.setPosition({20.f,20.f});
+    ScoreText.setString("Score is : " + std::to_string(GetScore()));
 }
 
 
@@ -29,23 +35,43 @@ void PlayGround::Draw(sf::RenderWindow& window)
     if(GameOverState)
     {
         window.draw(GameOverRect);
-        score->Draw(window);
-        window.getSize().x / 2;
-        score->SetPos({ window.getSize().x / 2.f - OffsetX ,window.getSize().y / 2.f + 200.f + OffsetY });
+        window.draw(ScoreText);
+        ScoreText.setPosition({ window.getSize().x / 2.f - OffsetX ,window.getSize().y / 2.f + 200.f + OffsetY });
     }
     else
     {
-         window.draw(PlayArea);    
-         assert(score); // you have to call the SetTextAttr func before drawing it
-         score->Draw(window);
+         window.draw(PlayArea);
+         window.draw(ScoreText);
+         paddle.Draw(window);
+         ball.Draw(window);
          for(const auto& b : boxes)
          {
             b.Draw(window);
          }
-         if(boxes.size() == 0)
-         {
-            SpawnBoxes();
-         }
+         
+    }
+}
+void PlayGround::UpdateGameState(float delta)
+{
+    ball.Movement(delta,paddle);
+    paddle.Movement(delta,GetLeftnRight().x, GetLeftnRight().y,GetTopnBottom().x, GetTopnBottom().y);
+    
+    if(ball.WallCollision(GetLeftnRight().x, GetLeftnRight().y, GetTopnBottom().x, GetTopnBottom().y)) // if it hits the floor
+    {
+        GameOverState = true;
+    }
+    for(int i = 0; i < boxes.size();i++)
+    {
+        if(ball.BoxCollision(boxes[i]))
+        {
+            UpdateScore(boxes[i].GetBoxScore());
+            boxes.erase(boxes.begin() + i);
+        }
+    }
+    if (boxes.size() == 0)
+    {
+        SpawnBoxes();
+        ball.SetSpeed(600.f);
     }
 }
 void PlayGround::SpawnBoxes()
@@ -53,23 +79,18 @@ void PlayGround::SpawnBoxes()
         std::random_device rd;
         std::mt19937 re(rd());
         std::uniform_int_distribution<int> ColorPick(0, 4);
-        sf::Vector2f TopLeft = PlayArea.getPosition() - (PlayArea.getSize() / 2.f);
         for (int i = 0; i < NumberOfBoxesInColumn; i++)
         {
             int ColorNum = ColorPick(re);
             for (int j = 0; j < NumberOfBoxesInRow; j++)
             {
-                float Xpos = TopLeft.x;
-                float Ypos = TopLeft.y;
+                float Xpos = GetLeftnRight().x;
+                float Ypos = GetTopnBottom().x;
                 Xpos += j * (BoxWidth + Padding.x);
                 Ypos += i * (BoxHeight + Padding.y);
                 boxes.emplace_back(Box(sf::Vector2f(Xpos, Ypos), BoxColors[ColorNum], BoxWidth, BoxHeight));
             }
         }
-}
-bool PlayGround::GetGameOverState() const
-{
-    return GameOverState;
 }
 
 float PlayGround::GetWidth() const
@@ -82,14 +103,14 @@ float PlayGround::GetHeight() const
     return PlayArea.getSize().y;
 }
 
-sf::Vector2f PlayGround::GetOffset() const
+int PlayGround::GetScore() const
 {
-    return sf::Vector2f(OffsetX,OffsetY);
+    return score;
 }
-
-float PlayGround::GetTopOffset() const
+void PlayGround::UpdateScore(int val)
 {
-    return TopOffset;
+    score += val;
+    ScoreText.setString("Score is : " + std::to_string(GetScore()));
 }
 
 sf::Vector2f PlayGround::GetPosition() const
@@ -97,26 +118,13 @@ sf::Vector2f PlayGround::GetPosition() const
     return PlayArea.getPosition();
 }
 
-void PlayGround::SetTextAttr(const std::string& fontPath, int textSize, const sf::Color& color, const sf::Vector2f& pos)
+sf::Vector2f PlayGround::GetLeftnRight() const
 {
-   score = std::make_unique<Score>(fontPath,textSize,color,pos);
+    return {PlayArea.getPosition().x - (GetWidth() / 2) , PlayArea.getPosition().x + (GetWidth() / 2)};
 }
 
-void PlayGround::UpdateScore(int val)
+sf::Vector2f PlayGround::GetTopnBottom() const
 {
-    if(score)
-    {
-        score->AddScore(val);
-    }
-}
-
-void PlayGround::SetGameOverState(bool in_state)
-{
-    GameOverState = in_state;
-}
-
-std::vector<Box>& PlayGround::GetBoxes()
-{
-    return boxes;
+    return { PlayArea.getPosition().y - (GetHeight() / 2) , PlayArea.getPosition().y + (GetHeight() / 2) };
 }
 
