@@ -7,7 +7,7 @@ Ball::Ball(float rad, const sf::Vector2f& pos, const sf::Color& color)
 	ball.setPosition(pos);
 	ball.setRadius(radius);
 	ball.setFillColor(color);
-	BallVel = speed * dir;
+	BallVel = {speed,speed};
 }
 void Ball::Draw(sf::RenderWindow& window) const
 {
@@ -53,24 +53,18 @@ void Ball::PaddleCollision(const Paddle& paddle)
 		)
 		{
 			float PaddleCenter = (paddle.GetPos().x + paddle.GetWidth() / 2.f);
-			float HitPos = (ball.getPosition().x - PaddleCenter) / (paddle.GetWidth() /2);
-			HitPos = std::clamp(HitPos,-1.f,1.f);
-			if (HitPos < 0.0f) //if it hits the left side
-			{
-				if(BallVel.x > 0)
-					BallVel.x *= -1;
-				if(BallVel.x < 0)
-					BallVel.x *= 1;
-			}	
-			else
-			{
-				if (BallVel.x > 0)
-					BallVel.x *= 1;
-				if (BallVel.x < 0)
-					BallVel.x *= -1;
-			}
-			
-			BallVel.y *= -1;
+
+			// where the ball hit based on paddle center position
+			// negative means we hit the left and positive means we hit the right
+			// values near zero will be just upward movement
+			float HitPos = (ball.getPosition().x - PaddleCenter) / (paddle.GetWidth() /2); 
+
+			HitPos = std::clamp(HitPos,-1.f,1.f);// make sure it's between -1 and 1
+			BallVel.x = HitPos * 0.75 * speed; // the 0.75 is the angle multiplier this means how much ball horizontal position gonna change
+
+			//this is just make sure the ball speed is constant regarding the x changes
+			//its just y^2 = squareRoot(speed^2 - |x^2|) to make sure y has the value to catch up to speed
+			BallVel.y = -sqrt(((speed * speed) - std::abs(BallVel.x * BallVel.x)));
 			
 		}
 }
@@ -86,21 +80,18 @@ bool Ball::BoxCollision(const Box& box)
 			float BoxCenter = (box.GetPos().x + box.GetSize().x / 2.f);
 			float HitPos = (ball.getPosition().x - BoxCenter) / (box.GetSize().x / 2);
 			HitPos = std::clamp(HitPos, -1.f, 1.f);
-			if (HitPos < 0.0f) //if it hits the left side
+			BallVel.x = HitPos * 0.75 * speed; // the 0.75 is the angle multiplier this means how much ball horizontal position gonna change
+
+			//same code as above but boxes can get hit from above so checking where the ball hits it
+			if(BallVel.y > 0)
 			{
-				if (BallVel.x > 0)
-					BallVel.x *= -1;
-				if (BallVel.x < 0)
-					BallVel.x *= 1;
+				BallVel.y = -sqrt(((speed * speed) - std::abs(BallVel.x * BallVel.x)));
 			}
-			else
+			if (BallVel.y < 0)
 			{
-				if (BallVel.x > 0)
-					BallVel.x *= 1;
-				if (BallVel.x < 0)
-					BallVel.x *= -1;
+				BallVel.y = sqrt(((speed * speed) - std::abs(BallVel.x * BallVel.x)));
 			}
-			BallVel.y *= -1;
+			speed += SpeedUpOnHit;
 			return true;
 	}
 	return false;

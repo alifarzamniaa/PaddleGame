@@ -19,9 +19,8 @@ private:
 	
 	float speed = 600.f;
 	float radius;
-	float SpeedUpOnHit = 5.f;
+	float SpeedUpOnHit = 10.f;
 
-	sf::Vector2f dir = {1.f,1.f};
 	sf::Vector2f BallVel;
 };
 
