@@ -8,6 +8,7 @@ Ball::Ball(float rad, const sf::Vector2f& pos, const sf::Color& color)
 	ball.setRadius(radius);
 	ball.setFillColor(color);
 	BallVel = {speed,speed};
+	InitSpeed = speed;
 }
 void Ball::Draw(sf::RenderWindow& window) const
 {
@@ -41,6 +42,16 @@ bool Ball::WallCollision(float Left,float Right,float Top, float Bottom)
 void Ball::SetSpeed(float val)
 {
 	speed = val;
+}
+
+float Ball::GetInitSpeed() const
+{
+	return InitSpeed;
+}
+
+sf::Vector2f Ball::GetBallPos() const
+{
+	return ball.getPosition();
 }
 
 void Ball::PaddleCollision(const Paddle& paddle)

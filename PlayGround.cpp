@@ -68,10 +68,11 @@ void PlayGround::UpdateGameState(float delta)
             boxes.erase(boxes.begin() + i);
         }
     }
-    if (boxes.size() == 0)
+    if (boxes.size() == 0 && ball.GetBallPos().y > GetHeight() / 2) // if the ball passed the boxes then respawn the box
     {
         SpawnBoxes();
-        ball.SetSpeed(600.f);
+        // rest the ball speed to default after breaking all the boxes
+        ball.SetSpeed(ball.GetInitSpeed());
     }
 }
 void PlayGround::SpawnBoxes()
@@ -110,7 +111,7 @@ int PlayGround::GetScore() const
 void PlayGround::UpdateScore(int val)
 {
     score += val;
-    ScoreText.setString("Score is : " + std::to_string(GetScore()));
+    ScoreText.setString("Score is : " + std::to_string(GetScore())); // updating the text
 }
 
 sf::Vector2f PlayGround::GetPosition() const
